@@ -65,8 +65,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -77,9 +75,6 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile=false
 
-      - name: Install Tauri CLI
-        run: cargo install tauri-cli --version "^2.0.0" --locked || true
-
       - name: Build Standalone Executable
         run: |
           cargo build --manifest-path apps/desktop-linux/src-tauri/Cargo.toml --release
@@ -87,7 +82,7 @@ jobs:
       - name: Bundle Desktop Artifacts (.deb & AppImage)
         run: |
           cd apps/desktop-linux/src-tauri
-          cargo tauri build || true
+          npx @tauri-apps/cli build || cargo tauri build || true
 
       - name: Upload Binary Artifact
         uses: actions/upload-artifact@v4
