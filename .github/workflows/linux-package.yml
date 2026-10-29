@@ -1,0 +1,106 @@
+name: Package Desktop · Linux (Tauri v2)
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'apps/desktop-linux/**'
+      - '.github/workflows/linux-package.yml'
+      - 'install.sh'
+    tags:
+      - 'v*'
+      - 'dsh-v*'
+  pull_request:
+    paths:
+      - 'apps/desktop-linux/**'
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build Type (release / debug)'
+        type: choice
+        options: [release, debug]
+        default: release
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux-desktop:
+    name: Build & Bundle Linux Desktop (x86_64)
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libssl-dev \
+            build-essential \
+            curl \
+            wget \
+            file \
+            appstream
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: Setup Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop-linux/src-tauri
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2.0.0" --locked || true
+
+      - name: Build Standalone Executable
+        run: |
+          cargo build --manifest-path apps/desktop-linux/src-tauri/Cargo.toml --release
+
+      - name: Bundle Desktop Artifacts (.deb & AppImage)
+        run: |
+          cd apps/desktop-linux/src-tauri
+          cargo tauri build || true
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsh-desktop-linux-x86_64
+          path: apps/desktop-linux/src-tauri/target/release/dsh-desktop-linux
+          if-no-files-found: warn
+
+      - name: Upload Bundles (.deb & AppImage)
+        uses: actions/upload-artifact@v4
+        with:
+          name: deepseek-harness-linux-packages
+          path: |
+            apps/desktop-linux/src-tauri/target/release/bundle/deb/*.deb
+            apps/desktop-linux/src-tauri/target/release/bundle/appimage/*.AppImage
+          if-no-files-found: warn

@@ -1,0 +1,202 @@
+/* ==========================================================================
+   DeepSeek Harness — Design Tokens (tokens.css)
+   Clean, modern, professional token system matching Linear/Vercel standard.
+   ========================================================================== */
+
+:root {
+  /* Default: Dark Theme (Smooth Apple/Obsidian Dark Surface) */
+  --bg-app: #0e0f12;
+  --bg-sidebar: #131418;
+  --bg-card: #191a20;
+  --bg-card-hover: #20222a;
+  --bg-elevated: #20222a;
+  --bg-overlay: rgba(14, 15, 18, 0.78);
+  --bg-input: #15161b;
+  --bg-input-focus: #18191f;
+  --bg-active: #252834;
+
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --border-focus: rgba(255, 255, 255, 0.28);
+
+  --text-primary: #fafafa;
+  --text-secondary: #a0a3af;
+  --text-tertiary: #6b6f7e;
+  --text-muted: #4e5260;
+
+  --accent-primary: #ffffff;
+  --accent-primary-hover: #f4f4f5;
+  --accent-text: #09090b;
+  --accent-brand: #4D6BFE;
+  --accent-brand-subtle: rgba(77, 107, 254, 0.12);
+
+  --badge-pro-bg: rgba(77, 107, 254, 0.14);
+  --badge-pro-text: #7086fd;
+  --badge-pro-border: rgba(77, 107, 254, 0.28);
+
+  --badge-free-bg: rgba(113, 113, 122, 0.14);
+  --badge-free-text: #a1a1aa;
+  --badge-free-border: rgba(113, 113, 122, 0.28);
+
+  --badge-api-bg: rgba(217, 119, 6, 0.14);
+  --badge-api-text: #fbbf24;
+  --badge-api-border: rgba(251, 191, 36, 0.28);
+
+  --status-standby: #d97706;
+  --status-connected: #10b981;
+  --status-danger: #ef4444;
+  --status-danger-bg: rgba(239, 68, 68, 0.12);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Smooth Rounded Radiuses matching iPhone / macOS */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 36px -4px rgba(0, 0, 0, 0.65);
+  --shadow-modal: 0 24px 64px -8px rgba(0, 0, 0, 0.75), 0 0 0 1px var(--border-default);
+
+  --transition-fast: 150ms ease;
+  --transition-smooth: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-sidebar: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  --chat-max-width: 760px;
+  --chat-font-size: 14px;
+}
+
+/* Light Theme Overrides */
+[data-theme="light"] {
+  --bg-app: #fcfcfd;
+  --bg-sidebar: #f4f4f6;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8f8fa;
+  --bg-elevated: #ffffff;
+  --bg-overlay: rgba(255, 255, 255, 0.85);
+  --bg-input: #ffffff;
+  --bg-input-focus: #fcfcfd;
+  --bg-active: #e4e4e7;
+
+  --border-subtle: #f0f0f2;
+  --border-default: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --border-focus: #71717a;
+
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-tertiary: #71717a;
+  --text-muted: #a1a1aa;
+
+  --accent-primary: #09090b;
+  --accent-primary-hover: #18181b;
+  --accent-text: #ffffff;
+  --accent-brand: #2563eb;
+  --accent-brand-subtle: rgba(37, 99, 235, 0.08);
+
+  --badge-pro-bg: rgba(37, 99, 235, 0.1);
+  --badge-pro-text: #1d4ed8;
+  --badge-pro-border: rgba(37, 99, 235, 0.2);
+
+  --badge-free-bg: rgba(113, 113, 122, 0.1);
+  --badge-free-text: #52525b;
+  --badge-free-border: rgba(113, 113, 122, 0.2);
+
+  --badge-api-bg: rgba(217, 119, 6, 0.1);
+  --badge-api-text: #b45309;
+  --badge-api-border: rgba(217, 119, 6, 0.2);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12);
+  --shadow-modal: 0 20px 48px -8px rgba(0, 0, 0, 0.18), 0 0 0 1px var(--border-default);
+}
+
+/* System Theme (when data-theme="system", uses prefers-color-scheme) */
+@media (prefers-color-scheme: light) {
+  [data-theme="system"] {
+    --bg-app: #fcfcfd;
+    --bg-sidebar: #f4f4f6;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f8f8fa;
+    --bg-elevated: #ffffff;
+    --bg-overlay: rgba(255, 255, 255, 0.85);
+    --bg-input: #ffffff;
+    --bg-input-focus: #fcfcfd;
+    --bg-active: #e4e4e7;
+
+    --border-subtle: #f0f0f2;
+    --border-default: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --border-focus: #71717a;
+
+    --text-primary: #09090b;
+    --text-secondary: #52525b;
+    --text-tertiary: #71717a;
+    --text-muted: #a1a1aa;
+
+    --accent-primary: #09090b;
+    --accent-primary-hover: #18181b;
+    --accent-text: #ffffff;
+    --accent-brand: #2563eb;
+    --accent-brand-subtle: rgba(37, 99, 235, 0.08);
+
+    --badge-pro-bg: rgba(37, 99, 235, 0.1);
+    --badge-pro-text: #1d4ed8;
+    --badge-pro-border: rgba(37, 99, 235, 0.2);
+
+    --badge-free-bg: rgba(113, 113, 122, 0.1);
+    --badge-free-text: #52525b;
+    --badge-free-border: rgba(113, 113, 122, 0.2);
+
+    --badge-api-bg: rgba(217, 119, 6, 0.1);
+    --badge-api-text: #b45309;
+    --badge-api-border: rgba(217, 119, 6, 0.2);
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12);
+    --shadow-modal: 0 20px 48px -8px rgba(0, 0, 0, 0.18), 0 0 0 1px var(--border-default);
+  }
+}
+
+/* Dynamic Text Size support */
+[data-text-size="small"] {
+  --chat-font-size: 13px;
+}
+[data-text-size="medium"] {
+  --chat-font-size: 14px;
+}
+[data-text-size="large"] {
+  --chat-font-size: 15.5px;
+}
+
+/* Dynamic Transcript Width */
+[data-transcript-width="compact"] {
+  --chat-max-width: 680px;
+}
+[data-transcript-width="standard"] {
+  --chat-max-width: 760px;
+}
+[data-transcript-width="wide"] {
+  --chat-max-width: 900px;
+}
+[data-transcript-width="full"] {
+  --chat-max-width: 100%;
+}
+
+/* Motion Preferences */
+[data-motion="reduced"] *,
+[data-motion="reduced"] *::before,
+[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}

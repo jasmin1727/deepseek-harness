@@ -896,6 +896,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/util/workspace-path
 
+  apps/desktop-linux: {}
+
   apps/plugin-market-generator:
     dependencies:
       '@deepseek-ai/dsh-plugin-market-index':

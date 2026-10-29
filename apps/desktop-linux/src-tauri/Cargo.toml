@@ -1,0 +1,47 @@
+[package]
+name = "dsh-desktop-linux"
+version = "0.2.1"
+description = "Tauri v2 Linux desktop shell for DeepSeek Harness"
+authors = ["DeepSeek AI"]
+license = "MIT"
+repository = "https://github.com/jasmin1727/deepseek-harness"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and to not conflict with the bin name.
+name = "dsh_desktop_linux_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "dsh-desktop-linux"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png", "devtools"] }
+tauri-plugin-shell = "2"
+tauri-plugin-os = "2"
+tauri-plugin-notification = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", default-features = false, features = ["json"] }
+tokio-tungstenite = { version = "0.24", default-features = false, features = ["handshake", "connect"] }
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[profile.dev]
+incremental = true
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

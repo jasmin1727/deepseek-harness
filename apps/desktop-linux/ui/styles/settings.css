@@ -1,0 +1,541 @@
+/* ==========================================================================
+   DeepSeek Harness — Settings Modal Styling (settings.css)
+   iPhone / macOS style: Frosted glass backdrop, rounded cards, sleek toggles
+   ========================================================================== */
+
+/* ── Modal Backdrop & Window ──────────────────────────────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background-color: var(--bg-overlay);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.modal-backdrop.modal-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-container {
+  width: 100%;
+  max-width: 900px;
+  height: 620px;
+  max-height: 90vh;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: 20px; /* Smooth macOS dialog curve */
+  box-shadow: var(--shadow-modal);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.97);
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-backdrop.modal-visible .modal-container {
+  transform: scale(1);
+}
+
+/* ── Settings Dialog Body ─────────────────────────────────────────────────── */
+.settings-dialog {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Left Navigation Rail */
+.settings-sidebar {
+  width: 230px;
+  min-width: 230px;
+  height: 100%;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-default);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  gap: 12px;
+}
+
+.settings-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.settings-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+.settings-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.settings-search-icon {
+  position: absolute;
+  left: 9px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.settings-search-input {
+  width: 100%;
+  height: 32px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding-left: 30px;
+  padding-right: 8px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.settings-search-input:focus {
+  border-color: var(--border-focus);
+}
+
+/* Navigation Groups */
+.settings-nav-scroll {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 2px;
+}
+
+.settings-nav-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.settings-nav-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--border-default);
+  border-radius: 4px;
+}
+
+.settings-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-nav-group-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-tertiary);
+  padding: 4px 8px 3px;
+}
+
+.settings-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 10px; /* Smooth rounded pill */
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 450;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.settings-tab-btn:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.settings-tab-btn.active {
+  background-color: var(--bg-active);
+  color: var(--text-primary);
+  font-weight: 550;
+}
+
+.settings-tab-icon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.settings-tab-btn.active .settings-tab-icon {
+  color: var(--accent-brand);
+}
+
+/* ── Right Content Pane ───────────────────────────────────────────────────── */
+.settings-content-pane {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--bg-app);
+}
+
+.settings-pane-header {
+  height: 52px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background-color: var(--bg-app);
+}
+
+.settings-pane-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+.settings-close-btn {
+  color: var(--text-tertiary);
+}
+.settings-close-btn:hover {
+  color: var(--text-primary);
+}
+
+.settings-pane-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-pane-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.settings-pane-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--border-default);
+  border-radius: 4px;
+}
+
+/* ── Grouped Rounded Cards (Image 1 & 2 Style) ───────────────────────────── */
+.settings-section-card,
+.settings-group {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: 16px; /* Smooth rounded card */
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-card-title,
+.settings-group-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.settings-card-desc,
+.settings-group-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+/* Row Layout */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-row:last-child {
+  border-bottom: none;
+  padding-bottom: 2px;
+}
+
+.settings-row-col {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.settings-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.settings-row-label,
+.settings-label {
+  font-size: 13.5px;
+  font-weight: 550;
+  color: var(--text-primary);
+}
+
+.settings-row-sub,
+.settings-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.settings-control {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Form Controls & Switches ─────────────────────────────────────────────── */
+.switch-control {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+}
+
+.switch-control input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--border-strong);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-fast);
+}
+
+.switch-slider::before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+input:checked + .switch-slider {
+  background-color: var(--accent-brand);
+}
+
+input:checked + .switch-slider::before {
+  transform: translateX(16px);
+}
+
+/* Theme Segmented Switch */
+.segmented-control {
+  display: inline-flex;
+  padding: 3px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  gap: 2px;
+}
+
+.segment-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.segment-btn:hover {
+  color: var(--text-primary);
+}
+
+.segment-btn.active {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  font-weight: 550;
+}
+
+/* Select Dropdown */
+.settings-select {
+  height: 32px;
+  padding: 0 10px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 12.5px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.settings-select:focus {
+  border-color: var(--border-focus);
+}
+
+/* Sliders */
+.settings-range-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 220px;
+}
+
+.settings-range {
+  flex: 1;
+  accent-color: var(--accent-brand);
+  cursor: pointer;
+}
+
+.settings-range-val {
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* Danger Zone */
+.danger-zone {
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  background-color: var(--status-danger-bg) !important;
+}
+
+.danger-zone .settings-card-title {
+  color: var(--status-danger);
+}
+
+/* ==========================================================================
+   Light Mode Overrides for Settings
+   ========================================================================== */
+
+/* In light mode bg-card = #fff, bg-app = #fcfcfd — modal background needs
+   to stand out from the page. Use elevated = #fff, content pane = #fafafa */
+[data-theme="light"] .modal-container {
+  background-color: #ffffff;
+  border-color: #e4e4e7;
+}
+
+[data-theme="light"] .settings-sidebar {
+  background-color: #f6f6f8;
+  border-right-color: #e4e4e7;
+}
+
+[data-theme="light"] .settings-content-pane,
+[data-theme="light"] .settings-pane-header {
+  background-color: #fafafa;
+  border-bottom-color: #e4e4e7;
+}
+
+/* Section cards in light mode: subtle off-white with clear border */
+[data-theme="light"] .settings-section-card,
+[data-theme="light"] .settings-group {
+  background-color: #ffffff;
+  border-color: #e4e4e7;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Ensure row separators are visible in light mode */
+[data-theme="light"] .settings-row {
+  border-bottom-color: #f0f0f2;
+}
+
+/* Light mode segmented control */
+[data-theme="light"] .segmented-control {
+  background-color: #f0f0f2;
+  border-color: #e4e4e7;
+}
+
+[data-theme="light"] .segment-btn.active {
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* Light mode selects inside settings */
+[data-theme="light"] .settings-select {
+  background-color: #ffffff;
+  border-color: #d4d4d8;
+  color: #09090b;
+}
+
+/* Light mode search input */
+[data-theme="light"] .settings-search-input {
+  background-color: #ffffff;
+  border-color: #e4e4e7;
+  color: #09090b;
+}
+
+/* System theme: ONLY apply light overrides when the user prefers light */
+@media (prefers-color-scheme: light) {
+  [data-theme="system"] .modal-container { background-color: #ffffff; border-color: #e4e4e7; }
+  [data-theme="system"] .settings-sidebar { background-color: #f6f6f8; border-right-color: #e4e4e7; }
+  [data-theme="system"] .settings-content-pane,
+  [data-theme="system"] .settings-pane-header { background-color: #fafafa; border-bottom-color: #e4e4e7; }
+  [data-theme="system"] .settings-section-card,
+  [data-theme="system"] .settings-group { background-color: #ffffff; border-color: #e4e4e7; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  [data-theme="system"] .settings-row { border-bottom-color: #f0f0f2; }
+  [data-theme="system"] .segmented-control { background-color: #f0f0f2; border-color: #e4e4e7; }
+  [data-theme="system"] .segment-btn.active { background-color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+  [data-theme="system"] .settings-select { background-color: #ffffff; border-color: #d4d4d8; color: #09090b; }
+  [data-theme="system"] .settings-search-input { background-color: #ffffff; border-color: #e4e4e7; color: #09090b; }
+}
+
+/* Compact, smooth centered pill for Coming Soon sections */
+.coming-soon-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  border-radius: 999px;
+  background: rgba(77, 107, 254, 0.08);
+  border: 1px solid rgba(77, 107, 254, 0.22);
+  color: #4D6BFE;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  user-select: none;
+}
+[data-theme="dark"] .coming-soon-pill {
+  background: rgba(77, 107, 254, 0.12);
+  border-color: rgba(77, 107, 254, 0.28);
+  color: #7086fd;
+}

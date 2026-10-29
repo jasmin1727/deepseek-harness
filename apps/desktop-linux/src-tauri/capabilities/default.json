@@ -1,0 +1,20 @@
+{
+  "$schema": "https://schema.tauri.app/config/2/capability",
+  "identifier": "default",
+  "description": "Default capability for the DeepSeek Harness Linux desktop",
+  "platforms": ["linux"],
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:default",
+    "core:window:allow-close",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-start-dragging",
+    "shell:allow-spawn",
+    "shell:allow-kill",
+    "shell:allow-stdin-write",
+    "os:default",
+    "notification:default"
+  ]
+}

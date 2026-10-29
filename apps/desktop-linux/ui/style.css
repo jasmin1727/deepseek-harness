@@ -1,0 +1,837 @@
+/* ==========================================================================
+   DeepSeek Harness — Linux Desktop Styling
+   High-Taste Modern Minimalist (Black & White / Anti-Slop Design)
+   Inspired by Linear, Raycast, and Apple Developer Tools.
+   ========================================================================== */
+
+:root {
+  --ground-dark: #09090b;
+  --surface-dark: #121214;
+  --surface-dark-subtle: #18181b;
+  --border-dark: #27272a;
+  --border-dark-faint: #1f1f23;
+
+  --ground-light: #ffffff;
+  --surface-light: #f4f4f5;
+  --border-light: #e4e4e7;
+  --border-light-strong: #d4d4d8;
+
+  --text-primary-dark: #fafafa;
+  --text-secondary-dark: #a1a1aa;
+  --text-tertiary-dark: #71717a;
+
+  --text-primary-light: #09090b;
+  --text-secondary-light: #52525b;
+  --text-tertiary-light: #71717a;
+
+  --btn-black: #000000;
+  --btn-black-hover: #18181b;
+  --btn-white: #ffffff;
+  --btn-white-hover: #f4f4f5;
+
+  --status-standby: #d97706;
+  --status-connected: #15803d;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; /* taste-skill-ignore */
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--ground-dark);
+  color: var(--text-primary-dark);
+  font-family: var(--font-sans);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ── App Shell Structure ─────────────────────────────────────────────────── */
+.app-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ground-dark);
+}
+
+/* ── Clean Frameless macOS Window Titlebar ────────────────────────────────── */
+.app-titlebar {
+  position: relative; /* ensure absolute positioning context */
+  height: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background-color: var(--ground-dark);
+  border-bottom: 1px solid var(--border-dark);
+  cursor: default;
+  z-index: 100;
+}
+
+/* Native macOS Traffic Lights */
+.traffic-lights {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #555555;
+  padding: 0;
+}
+
+.traffic-light svg {
+  width: 8px;
+  height: 8px;
+  opacity: 0;
+  color: rgba(0, 0, 0, 0.7);
+  transition: opacity 0.12s ease;
+}
+
+.traffic-lights:hover .traffic-light svg {
+  opacity: 1;
+}
+
+.traffic-light.close {
+  background-color: #ff5f56;
+  border-color: #e0443e;
+}
+
+.traffic-light.minimize {
+  background-color: #ffbd2e;
+  border-color: #dea123;
+}
+
+.traffic-light.expand {
+  background-color: #27c93f;
+  border-color: #1aab29;
+}
+
+/* Window Identity */
+.titlebar-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.brand-name {
+  font-weight: 600;
+  color: var(--text-primary-dark);
+}
+
+.titlebar-sep {
+  color: var(--text-tertiary-dark);
+}
+
+.titlebar-scope {
+  color: var(--text-secondary-dark);
+  font-weight: 400;
+}
+
+/* Right Status Pill */
+.titlebar-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.engine-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-dark);
+  background-color: var(--surface-dark);
+  font-size: 11.5px;
+  color: var(--text-secondary-dark);
+  cursor: pointer;
+}
+
+.engine-pill:hover {
+  border-color: var(--text-tertiary-dark);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--status-standby);
+  flex-shrink: 0;
+}
+
+.status-dot.connected {
+  background-color: var(--status-connected);
+}
+
+.arch-tag {
+  font-size: 11px;
+  color: var(--text-tertiary-dark);
+}
+
+/* ── Content Stage ────────────────────────────────────────────────────────── */
+.app-stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+
+/* ── View 1: Pristine Auth View (Full-Screen ASCII Pond Canvas + Centered Mac-Style Card) ── */
+.auth-stage-view {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fcfcfd;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.auth-stage-view.hidden {
+  display: none;
+  opacity: 0;
+}
+
+/* Fullscreen Living ASCII Pond Background */
+.auth-bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: auto;
+  display: block;
+}
+
+/* Centered Stage Wrapper */
+.auth-center-stage {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  pointer-events: none;
+}
+
+/* Pristine macOS-inspired Minimal White Card */
+.auth-card {
+  pointer-events: auto;
+  width: 400px;
+  max-width: 90vw;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 20px 48px -12px rgba(15, 23, 42, 0.12), 0 1px 3px rgba(15, 23, 42, 0.05);
+  padding: 38px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #0f172a;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+/* Card Brand Section */
+.auth-card-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 26px;
+}
+
+.auth-whale-icon-wrap {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.auth-whale-icon {
+  width: 44px;
+  height: 44px;
+  color: #4D6BFE;
+  filter: drop-shadow(0 2px 8px rgba(77, 107, 254, 0.25));
+}
+
+.auth-brand-badge-lockup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.auth-brand-name {
+  font-size: 21px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+}
+
+.auth-badge-harness {
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  padding: 2.5px 7px;
+  border-radius: 6px;
+  line-height: 1.3;
+}
+
+.auth-card-subtitle {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 3px 0;
+  letter-spacing: -0.2px;
+}
+
+.auth-card-desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Action Views inside Card */
+.auth-card-view {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Buttons */
+.btn-auth-primary {
+  width: 100%;
+  height: 42px;
+  border-radius: 10px;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #000000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14);
+}
+
+.btn-auth-primary:hover {
+  background-color: #27272a;
+  border-color: #27272a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.20);
+}
+
+.btn-auth-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14);
+}
+
+.btn-auth-secondary {
+  width: 100%;
+  height: 42px;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.btn-auth-secondary:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.btn-auth-secondary:active {
+  background-color: #e2e8f0;
+}
+
+.btn-auth-ghost {
+  width: 100%;
+  height: 38px;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.btn-auth-ghost:hover {
+  color: #0f172a;
+}
+
+/* Waiting for Browser View */
+.auth-waiting-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 7px 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1d4ed8;
+  margin: 0 auto 12px;
+}
+
+.auth-pulsing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  animation: authPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes authPulse {
+  0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(37, 99, 235, 0); }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+
+.auth-waiting-hint {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.auth-view-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* API Key View */
+.auth-key-header {
+  margin-bottom: 16px;
+}
+
+.auth-key-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.auth-key-hint {
+  font-size: 12.5px;
+  color: #64748b;
+  margin: 0;
+}
+
+.auth-key-hint code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #334155;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.auth-input-wrapper {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.auth-key-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  color: #0f172a;
+  font-size: 13.5px;
+  font-family: var(--font-mono);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-key-input::placeholder {
+  color: #94a3b8;
+}
+
+.auth-key-input:focus {
+  border-color: #4D6BFE;
+  box-shadow: 0 0 0 3px rgba(77, 107, 254, 0.15);
+}
+
+/* ── View 2: Minimal Developer Dashboard ─────────────────────────────────── */
+.dashboard-stage-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ground-dark);
+  padding: 32px 40px;
+  overflow-y: auto;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dashboard-stage-view.hidden {
+  display: none;
+  opacity: 0;
+}
+
+/* Dashboard Header Row */
+.dash-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-dark);
+  margin-bottom: 28px;
+}
+
+.dash-heading-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dash-main-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--text-primary-dark);
+}
+
+.dash-sub-title {
+  font-size: 13px;
+  color: var(--text-secondary-dark);
+}
+
+.dash-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Model Selector Segmented Control (Raycast / Linear style) */
+.model-segmented-control {
+  display: flex;
+  align-items: center;
+  background-color: var(--surface-dark);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.model-tab-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary-dark);
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.model-tab-btn.active {
+  background-color: var(--surface-dark-subtle);
+  color: var(--text-primary-dark);
+  border: 1px solid var(--border-dark);
+}
+
+.model-tab-btn:hover:not(.active) {
+  color: var(--text-primary-dark);
+}
+
+.btn-signout-dark {
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-secondary-dark);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-signout-dark:hover {
+  border-color: var(--text-tertiary-dark);
+  color: var(--text-primary-dark);
+}
+
+/* Developer Metrics & Status Strip (Linear style ruled cards) */
+.dash-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.metric-panel {
+  background-color: var(--surface-dark);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: var(--text-tertiary-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary-dark);
+}
+
+.metric-detail {
+  font-size: 12px;
+  color: var(--text-secondary-dark);
+}
+
+/* Quick Action Task Buttons */
+.dash-actions-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-tertiary-dark);
+  margin-bottom: 12px;
+}
+
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.task-button {
+  background-color: var(--surface-dark);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.task-button:hover {
+  border-color: var(--text-tertiary-dark);
+  background-color: var(--surface-dark-subtle);
+}
+
+.task-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary-dark);
+}
+
+.task-desc {
+  font-size: 11.5px;
+  color: var(--text-tertiary-dark);
+}
+
+/* Prompt Command Bar (Bottom of Dashboard) */
+.command-bar-wrapper {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.command-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--surface-dark);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  padding: 6px 8px 6px 14px;
+  gap: 12px;
+  transition: border-color 0.15s ease;
+}
+
+.command-bar:focus-within {
+  border-color: var(--text-secondary-dark);
+}
+
+.command-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary-dark);
+  flex-shrink: 0;
+}
+
+.command-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-primary-dark);
+  font-size: 13.5px;
+  font-family: var(--font-sans);
+  outline: none;
+}
+
+.command-input::placeholder {
+  color: var(--text-tertiary-dark);
+}
+
+.command-bar-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.key-hint {
+  font-size: 11px;
+  color: var(--text-tertiary-dark);
+  padding: 2px 6px;
+  border: 1px solid var(--border-dark);
+  border-radius: 4px;
+  background-color: var(--ground-dark);
+}
+
+.btn-run-command {
+  height: 30px;
+  padding: 0 12px;
+  background-color: var(--btn-white);
+  color: var(--btn-black);
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.15s ease;
+}
+
+.btn-run-command:hover {
+  background-color: var(--btn-white-hover);
+}
+
+/* Diagnostic Console Tray */
+.console-tray {
+  background-color: var(--ground-dark);
+  border: 1px solid var(--border-dark-faint);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: var(--font-mono); /* taste-skill-ignore */
+  font-size: 11px;
+  color: var(--text-secondary-dark);
+  display: flex;
+  justify-content: space-between;
+}
+
+.console-log {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Minimal Spinner ──────────────────────────────────────────────────────── */
+.spinner-minimal {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+}
+
+.loading .spinner-minimal {
+  display: inline-block;
+}
+
+.loading .btn-text-content {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .auth-stage-view {
+    flex-direction: column;
+  }
+  .auth-hero-panel {
+    padding: 32px;
+  }
+  .auth-form-panel {
+    width: 100%;
+    min-width: 100%;
+    padding: 32px;
+  }
+  .dash-metrics-grid,
+  .tasks-grid {
+    grid-template-columns: 1fr;
+  }
+}

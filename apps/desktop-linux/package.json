@@ -1,0 +1,14 @@
+{
+  "name": "@deepseek-ai/dsh-desktop-linux",
+  "description": "Tauri v2 desktop shell for DeepSeek Harness on Linux (AppImage / .deb)",
+  "version": "0.2.1",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "cargo tauri dev",
+    "build": "cargo tauri build",
+    "build:debug": "cargo tauri build --debug",
+    "tauri": "cargo tauri"
+  }
+}
