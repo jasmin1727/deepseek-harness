@@ -181,15 +181,21 @@ else
 fi
 
 # Step 6: Resolve Repository Source
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR=""
+if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]:-}" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || true)"
+fi
 TARGET_REPO_DIR=""
 
-if [ -f "$SCRIPT_DIR/apps/desktop-linux/src-tauri/Cargo.toml" ]; then
+if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/apps/desktop-linux/src-tauri/Cargo.toml" ]; then
   TARGET_REPO_DIR="$SCRIPT_DIR"
   log_info "Running from local repository source: $TARGET_REPO_DIR"
-elif [ -f "$SCRIPT_DIR/../apps/desktop-linux/src-tauri/Cargo.toml" ]; then
+elif [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/../apps/desktop-linux/src-tauri/Cargo.toml" ]; then
   TARGET_REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
   log_info "Running from local repository source: $TARGET_REPO_DIR"
+elif [ -f "$(pwd)/apps/desktop-linux/src-tauri/Cargo.toml" ]; then
+  TARGET_REPO_DIR="$(pwd)"
+  log_info "Running from current working directory: $TARGET_REPO_DIR"
 else
   TARGET_REPO_DIR="$HOME/.local/share/deepseek-harness"
   log_info "Preparing DeepSeek Harness source in $TARGET_REPO_DIR..."
