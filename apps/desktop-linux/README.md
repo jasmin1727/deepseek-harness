@@ -21,10 +21,20 @@ While the standard desktop application is distributed as an Electron package for
 ## 2. Quickstart
 
 ### Automated One-Line Install
-Run the universal installer directly in your terminal:
+
+#### Option A: Official Upstream (Post-Merge)
+Once this contribution is merged into the official repository, install directly via:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jasmin1727/deepseek-harness/master/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/linux-install.sh | bash
 ```
+
+#### Option B: Pre-Merge Reviewer Testing (Current Fork)
+Upstream maintainers and reviewers can test and verify the complete installation flow immediately before merging:
+```bash
+curl -fsSL https://raw.githubusercontent.com/jasmin1727/deepseek-harness/master/linux-install.sh | bash
+```
+
+> **Note**: Both installer commands automatically detect your Linux distribution (`pacman`, `apt`, `dnf`, `zypper`), install missing system libraries (`webkit2gtk-4.1`, `librsvg`, etc.), build the native release binary, register `~/.local/share/applications/deepseek-harness.desktop`, configure high-DPI desktop icons, and set up the `dsh://` URL scheme handler.
 
 ### Manual Installation & Local Build
 
@@ -39,8 +49,11 @@ curl -fsSL https://raw.githubusercontent.com/jasmin1727/deepseek-harness/master/
 
 #### Build & Run
 ```bash
-# 1. Clone repository
-git clone https://github.com/jasmin1727/deepseek-harness.git
+# 1. Clone official repository (or fork for pre-merge testing)
+git clone https://github.com/deepseek-ai/deepseek-harness.git
+# Pre-merge testing branch:
+# git clone https://github.com/jasmin1727/deepseek-harness.git
+
 cd deepseek-harness
 
 # 2. Install workspace dependencies

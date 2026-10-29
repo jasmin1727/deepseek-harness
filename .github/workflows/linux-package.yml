@@ -7,7 +7,8 @@ on:
     paths:
       - 'apps/desktop-linux/**'
       - '.github/workflows/linux-package.yml'
-      - 'install.sh'
+      - 'linux-install.sh'
+      - 'scripts/install-linux.sh'
     tags:
       - 'v*'
       - 'dsh-v*'
