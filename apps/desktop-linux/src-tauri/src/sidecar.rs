@@ -192,8 +192,10 @@ impl Default for DshSidecar {
 
 /// Probes interactive login shell environment (`$SHELL -ilc "env -0"`).
 pub async fn probe_login_shell_env() -> HashMap<String, String> {
+    // Start with all current process environment variables so nothing is lost
+    let mut map: HashMap<String, String> = std::env::vars().collect();
+
     let shell = std::env::var("SHELL").unwrap_or_else(|_| "/bin/bash".to_string());
-    let mut map = HashMap::new();
 
     let output = tokio::time::timeout(
         Duration::from_secs(4),
@@ -244,6 +246,19 @@ fn is_port_available(port: u16) -> bool {
     TcpListener::bind(("127.0.0.1", port)).is_ok()
 }
 
+/// Helper to locate tsx executable inside a repository root.
+fn resolve_tsx(repo: &Path) -> PathBuf {
+    let candidate_mjs = repo.join("node_modules/tsx/dist/cli.mjs");
+    if candidate_mjs.exists() {
+        return candidate_mjs;
+    }
+    let candidate_bin = repo.join("node_modules/.bin/tsx");
+    if candidate_bin.exists() {
+        return candidate_bin;
+    }
+    candidate_mjs
+}
+
 /// Resolves repository paths for deepseek-harness dynamically across environments.
 fn resolve_repo_paths() -> (PathBuf, PathBuf, PathBuf) {
     let base = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
@@ -252,13 +267,29 @@ fn resolve_repo_paths() -> (PathBuf, PathBuf, PathBuf) {
     if let Ok(env_root) = std::env::var("DSH_REPO_ROOT") {
         let p = PathBuf::from(env_root);
         if p.join("apps/cli/src/bin.ts").exists() {
-            let tsx = p.join("node_modules/tsx/dist/cli.mjs");
+            let tsx = resolve_tsx(&p);
             let bin = p.join("apps/cli/src/bin.ts");
             return (p, tsx, bin);
         }
     }
 
-    // 2. Ascend upwards from current working directory or executable location
+    // 2. Check ~/.dsh/repo_path pointer if saved by installer
+    if let Ok(home) = std::env::var("HOME") {
+        let pointer_file = PathBuf::from(&home).join(".dsh/repo_path");
+        if pointer_file.exists() {
+            if let Ok(content) = std::fs::read_to_string(&pointer_file) {
+                let trimmed = content.trim();
+                let p = PathBuf::from(trimmed);
+                if p.join("apps/cli/src/bin.ts").exists() {
+                    let tsx = resolve_tsx(&p);
+                    let bin = p.join("apps/cli/src/bin.ts");
+                    return (p, tsx, bin);
+                }
+            }
+        }
+    }
+
+    // 3. Ascend upwards from current working directory or executable location
     let mut search_origins = vec![base.clone()];
     if let Ok(exe_path) = std::env::current_exe() {
         if let Some(exe_dir) = exe_path.parent() {
@@ -270,7 +301,7 @@ fn resolve_repo_paths() -> (PathBuf, PathBuf, PathBuf) {
         let mut cur = origin;
         for _ in 0..7 {
             if cur.join("apps/cli/src/bin.ts").exists() {
-                let tsx = cur.join("node_modules/tsx/dist/cli.mjs");
+                let tsx = resolve_tsx(&cur);
                 let bin = cur.join("apps/cli/src/bin.ts");
                 return (cur, tsx, bin);
             }
@@ -282,17 +313,31 @@ fn resolve_repo_paths() -> (PathBuf, PathBuf, PathBuf) {
         }
     }
 
-    // 3. Fallback: Check installed application data directories (e.g. ~/.local/share/deepseek-harness)
+    // 4. Fallback: Common paths where deepseek-harness may be installed or cloned
     if let Ok(home) = std::env::var("HOME") {
-        let installed_repo = PathBuf::from(home).join(".local/share/deepseek-harness");
-        if installed_repo.join("apps/cli/src/bin.ts").exists() {
-            let tsx = installed_repo.join("node_modules/tsx/dist/cli.mjs");
-            let bin = installed_repo.join("apps/cli/src/bin.ts");
-            return (installed_repo, tsx, bin);
+        let candidates = [
+            PathBuf::from(&home).join(".local/share/deepseek-harness"),
+            PathBuf::from(&home).join("Projects/deepseek-harness"),
+            PathBuf::from(&home).join("projects/deepseek-harness"),
+            PathBuf::from(&home).join("deepseek-harness"),
+            PathBuf::from(&home).join("src/deepseek-harness"),
+            PathBuf::from(&home).join("dev/deepseek-harness"),
+            PathBuf::from(&home).join("workspace/deepseek-harness"),
+            PathBuf::from(&home).join("Desktop/deepseek-harness"),
+            PathBuf::from("/opt/deepseek-harness"),
+            PathBuf::from("/usr/share/deepseek-harness"),
+        ];
+
+        for installed_repo in candidates {
+            if installed_repo.join("apps/cli/src/bin.ts").exists() {
+                let tsx = resolve_tsx(&installed_repo);
+                let bin = installed_repo.join("apps/cli/src/bin.ts");
+                return (installed_repo, tsx, bin);
+            }
         }
     }
 
-    let tsx_cli = base.join("node_modules/tsx/dist/cli.mjs");
+    let tsx_cli = resolve_tsx(&base);
     let bin_ts = base.join("apps/cli/src/bin.ts");
     (base, tsx_cli, bin_ts)
 }
@@ -323,6 +368,10 @@ async fn spawn_daemon_child(probed_env: &HashMap<String, String>) -> std::io::Re
         })
         .unwrap_or_else(|| PathBuf::from("/usr/bin/node"));
 
+    println!(
+        ">>> [DAEMON:SPAWN] node={:?} root={:?} tsx={:?} bin={:?} requested_port={requested_port}",
+        node_path, repo_root, tsx_cli, bin_ts
+    );
     info!(
         "Spawning daemon: node={:?} in {:?} requested_port={requested_port}",
         node_path, repo_root
@@ -389,6 +438,7 @@ async fn run_supervisor_loop(app: AppHandle, inner: Arc<Mutex<SupervisorState>>)
             tokio::spawn(async move {
                 let mut reader = BufReader::new(stdout).lines();
                 while let Ok(Some(line)) = reader.next_line().await {
+                    println!(">>> [DAEMON:OUT] {line}");
                     append_log(&inner_stdout, format!("[daemon:out] {line}")).await;
                     check_readiness_line(&app_stdout, &inner_stdout, &line).await;
                 }
@@ -401,6 +451,7 @@ async fn run_supervisor_loop(app: AppHandle, inner: Arc<Mutex<SupervisorState>>)
             tokio::spawn(async move {
                 let mut reader = BufReader::new(stderr).lines();
                 while let Ok(Some(line)) = reader.next_line().await {
+                    eprintln!(">>> [DAEMON:ERR] {line}");
                     append_log(&inner_stderr, format!("[daemon:err] {line}")).await;
                 }
             });

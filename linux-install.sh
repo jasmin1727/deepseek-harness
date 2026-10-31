@@ -215,6 +215,14 @@ else
   fi
 fi
 
+# Ensure pointer & symlink are always configured so GUI desktop launchers can locate the repository
+mkdir -p "$DSH_DIR" "$HOME/.local/share"
+echo "$TARGET_REPO_DIR" > "$DSH_DIR/repo_path"
+if [ "$TARGET_REPO_DIR" != "$HOME/.local/share/deepseek-harness" ]; then
+  ln -sfn "$TARGET_REPO_DIR" "$HOME/.local/share/deepseek-harness"
+fi
+log_success "Configured repository path link: $TARGET_REPO_DIR"
+
 # Helper to run pnpm across varied system configurations
 run_pnpm() {
   if command -v pnpm &>/dev/null; then
@@ -237,6 +245,13 @@ run_pnpm() {
 log_info "Installing workspace packages and compiling release binary..."
 cd "$TARGET_REPO_DIR"
 run_pnpm install --frozen-lockfile=false
+
+# Ensure required client bundles are compiled
+if [ ! -f "packages/client/ui-context-menu/lib/client.js" ] || [ ! -f "packages/client/ui-file-actions/lib/client.js" ]; then
+  log_info "Building required client UI modules..."
+  (cd packages/client/ui-context-menu && npx tsdown --config-loader native) || true
+  (cd packages/client/ui-file-actions && npx tsdown --config-loader native) || true
+fi
 
 cargo build --manifest-path apps/desktop-linux/src-tauri/Cargo.toml --release
 
