@@ -36,6 +36,17 @@ curl -fsSL https://raw.githubusercontent.com/jasmin1727/deepseek-harness/master/
 
 > **Note**: Both installer commands automatically detect your Linux distribution (`pacman`, `apt`, `dnf`, `zypper`), install missing system libraries (`webkit2gtk-4.1`, `librsvg`, etc.), build the native release binary, register `~/.local/share/applications/deepseek-harness.desktop`, configure high-DPI desktop icons, and set up the `dsh://` URL scheme handler.
 
+### Pre-Built Standalone Packages (GitHub Releases)
+
+If you prefer not to compile from source, standalone binaries and pre-packaged distribution installers are available on the [Releases page](https://github.com/jasmin1727/deepseek-harness/releases):
+
+| Format | Target Distributions | How to Run / Install |
+| :--- | :--- | :--- |
+| **`.AppImage`** | Universal (All Linux) | `chmod +x DeepSeek\ Harness*.AppImage && ./DeepSeek\ Harness*.AppImage` |
+| **`.deb`** | Debian, Ubuntu, Linux Mint, Pop!_OS | `sudo dpkg -i DeepSeek\ Harness*.deb` |
+| **`.rpm`** | Fedora, RHEL, openSUSE, CentOS | `sudo rpm -i DeepSeek\ Harness*.rpm` |
+| **Binary** | Linux x86_64 ELF standalone | `chmod +x dsh-desktop-linux && ./dsh-desktop-linux` |
+
 ### Manual Installation & Local Build
 
 #### Prerequisites
