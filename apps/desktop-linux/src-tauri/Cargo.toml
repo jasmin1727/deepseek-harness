@@ -1,6 +1,6 @@
 [package]
 name = "dsh-desktop-linux"
-version = "0.2.2"
+version = "0.2.3"
 description = "Tauri v2 Linux desktop shell for DeepSeek Harness"
 authors = ["DeepSeek AI"]
 license = "MIT"
